@@ -1,0 +1,11 @@
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/CMakeFiles/spreadsheet.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/CMakeFiles/PACKAGE.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/CMakeFiles/INSTALL.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/CMakeFiles/ALL_BUILD.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/CMakeFiles/ZERO_CHECK.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/CMakeFiles/PACKAGE.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/CMakeFiles/INSTALL.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/CMakeFiles/ALL_BUILD.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/runtime/CMakeFiles/PACKAGE.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/runtime/CMakeFiles/antlr4_static.dir
+D:/dev/С++/Projects_C++/Черный пояс С++/(Курсовой проект) Электронная таблица/build/antlr4_runtime/runtime/CMakeFiles/INSTALL.dir

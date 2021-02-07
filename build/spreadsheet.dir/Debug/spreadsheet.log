@@ -1,0 +1,5 @@
+﻿  Sheet.cpp
+Sheet.cpp(92): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+Sheet.cpp(93): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+Sheet.cpp(116): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  spreadsheet.vcxproj -> D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\Debug\spreadsheet.exe

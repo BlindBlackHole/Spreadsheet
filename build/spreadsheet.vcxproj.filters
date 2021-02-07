@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="formula.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sheet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaLexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\antlr4cpp_generated_src\Formula\FormulaListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\formula.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\test_runner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFormulaListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sheet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\build\CMakeFiles\ca12759678dd605598fcb98eae235678\FormulaLexer.interp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\dev\С++\Projects_C++\Черный пояс С++\(Курсовой проект) Электронная таблица\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{94DD6B67-8AB4-33F1-A682-78D3AD728EFD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{1BBF6854-F545-33B6-A86A-4CC7B450FCE6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{91C057DE-8EE0-3726-8286-8A0EDB401DF8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
