@@ -29,7 +29,6 @@ Debug_Build
 Release_Build
 Win32
 Win64
-build*
 .pch
 .moc
 \!Out

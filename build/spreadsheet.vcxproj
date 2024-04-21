@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|win32">
+      <Configuration>Debug</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|win32">
+      <Configuration>Release</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5A17CA0D-0F4C-3C1A-B7BA-B8AE14514F93}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>win32</Platform>
+    <ProjectName>spreadsheet</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">D:\univ\2 sem\cource\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">spreadsheet.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">spreadsheet</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|win32'">D:\univ\2 sem\cource\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|win32'">spreadsheet.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|win32'">spreadsheet</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">D:\univ\2 sem\cource\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">spreadsheet.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">spreadsheet</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">D:\univ\2 sem\cource\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">spreadsheet.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">spreadsheet</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>antlr4_runtime\runtime\Debug\antlr4-runtime-static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/univ/2 sem/cource/build/Debug/spreadsheet.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/univ/2 sem/cource/build/Debug/spreadsheet.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>antlr4_runtime\runtime\Release\antlr4-runtime-static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/univ/2 sem/cource/build/Release/spreadsheet.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/univ/2 sem/cource/build/Release/spreadsheet.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>antlr4_runtime\runtime\MinSizeRel\antlr4-runtime-static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/univ/2 sem/cource/build/MinSizeRel/spreadsheet.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/univ/2 sem/cource/build/MinSizeRel/spreadsheet.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ANTLR4CPP_STATIC;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula;D:\univ\2 sem\cource\antlr4_runtime\runtime\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>antlr4_runtime\runtime\RelWithDebInfo\antlr4-runtime-static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/univ/2 sem/cource/build/RelWithDebInfo/spreadsheet.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/univ/2 sem/cource/build/RelWithDebInfo/spreadsheet.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\univ\2 sem\cource\build\CMakeFiles\d653281b0a34042bb48e36b436baabd3\FormulaLexer.interp.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">Building FormulaParser with ANTLR 4.7.2</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">setlocal
+cd "D:\univ\2 sem\cource"
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\Java\jdk-21\bin\java.exe" -jar "D:/univ/2 sem/cource/antlr-4.7.2-complete.jar" Formula.g4 -o "D:/univ/2 sem/cource/build/antlr4cpp_generated_src/Formula" -no-listener -Dlanguage=Cpp -listener
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">D:\univ\2 sem\cource\Formula.g4;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.interp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.tokens;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|win32'">Building FormulaParser with ANTLR 4.7.2</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">setlocal
+cd "D:\univ\2 sem\cource"
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\Java\jdk-21\bin\java.exe" -jar "D:/univ/2 sem/cource/antlr-4.7.2-complete.jar" Formula.g4 -o "D:/univ/2 sem/cource/build/antlr4cpp_generated_src/Formula" -no-listener -Dlanguage=Cpp -listener
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">D:\univ\2 sem\cource\Formula.g4;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.interp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.tokens;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">Building FormulaParser with ANTLR 4.7.2</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">setlocal
+cd "D:\univ\2 sem\cource"
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\Java\jdk-21\bin\java.exe" -jar "D:/univ/2 sem/cource/antlr-4.7.2-complete.jar" Formula.g4 -o "D:/univ/2 sem/cource/build/antlr4cpp_generated_src/Formula" -no-listener -Dlanguage=Cpp -listener
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">D:\univ\2 sem\cource\Formula.g4;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.interp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.tokens;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">Building FormulaParser with ANTLR 4.7.2</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">setlocal
+cd "D:\univ\2 sem\cource"
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\Java\jdk-21\bin\java.exe" -jar "D:/univ/2 sem/cource/antlr-4.7.2-complete.jar" Formula.g4 -o "D:/univ/2 sem/cource/build/antlr4cpp_generated_src/Formula" -no-listener -Dlanguage=Cpp -listener
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">D:\univ\2 sem\cource\Formula.g4;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.interp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.tokens;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.h;D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\univ\2 sem\cource\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">Building Custom Rule D:/univ/2 sem/cource/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">setlocal
+"C:\Program Files\CMake3.15\bin\cmake.exe" "-SD:/univ/2 sem/cource" "-BD:/univ/2 sem/cource/build" --check-stamp-file "D:/univ/2 sem/cource/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeFindJavaCommon.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindJava.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageMessage.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\WindowsPaths.cmake;D:\univ\2 sem\cource\FindANTLR.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCXXCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeRCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">D:\univ\2 sem\cource\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|win32'">Building Custom Rule D:/univ/2 sem/cource/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">setlocal
+"C:\Program Files\CMake3.15\bin\cmake.exe" "-SD:/univ/2 sem/cource" "-BD:/univ/2 sem/cource/build" --check-stamp-file "D:/univ/2 sem/cource/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeFindJavaCommon.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindJava.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageMessage.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\WindowsPaths.cmake;D:\univ\2 sem\cource\FindANTLR.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCXXCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeRCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">D:\univ\2 sem\cource\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">Building Custom Rule D:/univ/2 sem/cource/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">setlocal
+"C:\Program Files\CMake3.15\bin\cmake.exe" "-SD:/univ/2 sem/cource" "-BD:/univ/2 sem/cource/build" --check-stamp-file "D:/univ/2 sem/cource/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeFindJavaCommon.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindJava.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageMessage.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\WindowsPaths.cmake;D:\univ\2 sem\cource\FindANTLR.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCXXCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeRCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">D:\univ\2 sem\cource\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">Building Custom Rule D:/univ/2 sem/cource/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">setlocal
+"C:\Program Files\CMake3.15\bin\cmake.exe" "-SD:/univ/2 sem/cource" "-BD:/univ/2 sem/cource/build" --check-stamp-file "D:/univ/2 sem/cource/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeFindJavaCommon.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindJava.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\FindPackageMessage.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\Windows.cmake;C:\Program Files\CMake3.15\share\cmake-3.15\Modules\Platform\WindowsPaths.cmake;D:\univ\2 sem\cource\FindANTLR.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeCXXCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeRCCompiler.cmake;D:\univ\2 sem\cource\build\CMakeFiles\3.15.4\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">D:\univ\2 sem\cource\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Ast.cpp" />
+    <ClCompile Include="src\cell.cpp" />
+    <ClCompile Include="src\common.cpp" />
+    <ClCompile Include="src\formula.cpp" />
+    <ClCompile Include="src\graph.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Sheet.cpp" />
+    <ClCompile Include="src\tests.cpp" />
+    <ClInclude Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.h" />
+    <ClCompile Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaLexer.cpp" />
+    <ClInclude Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.h" />
+    <ClCompile Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaParser.cpp" />
+    <ClInclude Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.h" />
+    <ClCompile Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaBaseListener.cpp" />
+    <ClInclude Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.h" />
+    <ClCompile Include="D:\univ\2 sem\cource\build\antlr4cpp_generated_src\Formula\FormulaListener.cpp" />
+    <ClInclude Include="src\Ats.h" />
+    <ClInclude Include="src\cell.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\formula.h" />
+    <ClInclude Include="src\MyFormulaListener.h" />
+    <ClInclude Include="src\tests.h" />
+    <ClInclude Include="src\test_runner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\univ\2 sem\cource\build\ZERO_CHECK.vcxproj">
+      <Project>{D20D6746-6E34-35AC-8403-68C84260448E}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\univ\2 sem\cource\build\antlr4_runtime\runtime\antlr4_static.vcxproj">
+      <Project>{1DB76976-99F4-35E3-9306-507552E2E64A}</Project>
+      <Name>antlr4_static</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
