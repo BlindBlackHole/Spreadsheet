@@ -197,11 +197,10 @@ void TestFormulaReferences()
     sheet->SetCell("A2"_pos, "2");
     ASSERT_EQUAL(evaluate("A1+A2"), 3);
 
-    // ���� �� ����:
     sheet->SetCell("B3"_pos, "");
-    ASSERT_EQUAL(evaluate("A1+B3"), 1);  // ������ � ������ �������
-    ASSERT_EQUAL(evaluate("A1+B1"), 1);  // ������ ������
-    ASSERT_EQUAL(evaluate("A1+E4"), 1);  // ������ �� ��������� �������
+    ASSERT_EQUAL(evaluate("A1+B3"), 1);  
+    ASSERT_EQUAL(evaluate("A1+B1"), 1);  
+    ASSERT_EQUAL(evaluate("A1+E4"), 1);  
 }
 
 void TestFormulaExpressionFormatting()
@@ -555,7 +554,6 @@ void TestCellReferences()
     ASSERT_EQUAL(sheet->GetCell("A2"_pos)->GetReferencedCells(), std::vector{"A1"_pos});
     ASSERT_EQUAL(sheet->GetCell("B2"_pos)->GetReferencedCells(), std::vector{"A1"_pos});
 
-    // ������ �� ������ ������
     sheet->SetCell("B2"_pos, "=B1");
     ASSERT(sheet->GetCell("B1"_pos)->GetReferencedCells().empty());
     ASSERT_EQUAL(sheet->GetCell("B2"_pos)->GetReferencedCells(), std::vector{"B1"_pos});
@@ -564,7 +562,6 @@ void TestCellReferences()
     ASSERT(sheet->GetCell("A1"_pos)->GetReferencedCells().empty());
     ASSERT(sheet->GetCell("A2"_pos)->GetReferencedCells().empty());
 
-    // ������ �� ������ �� ��������� �������
     sheet->SetCell("B1"_pos, "=C3");
     ASSERT_EQUAL(sheet->GetCell("B1"_pos)->GetReferencedCells(), std::vector{"C3"_pos});
 }

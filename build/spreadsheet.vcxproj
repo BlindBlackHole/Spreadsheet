@@ -397,7 +397,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="src\cell.cpp" />
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\formula.cpp" />
-    <ClCompile Include="src\graph.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Sheet.cpp" />
     <ClCompile Include="src\tests.cpp" />
