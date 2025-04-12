@@ -55,6 +55,8 @@ public:
 
     double Evaluate(const ISheet& sheet) override;
 
+    double Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results);
+
     std::string ToString(char other_op, bool isRight = false, bool isUnary = false) override;
 
     std::string ToString(std::string lhsValue);
@@ -95,6 +97,8 @@ public:
     void PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp = false);
 
     std::string GetExpression() const;
+
+    double Evaluate(const ISheet& sheet);
 
     void Ast::Clear() {
         std::unordered_set<std::shared_ptr<AstContext>> visited;

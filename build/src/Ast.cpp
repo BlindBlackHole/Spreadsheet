@@ -81,37 +81,67 @@ void AstBinaryOperation::SetParams(std::shared_ptr<AstContext> lhs, std::shared_
     this->rhs = rhs;
 }
 
+namespace {
+
+    double applyOperator(char op, double lhs, double rhs)
+    {
+        if (op == '+') {
+            auto answer = lhs + rhs;
+            if (!std::isfinite(answer)) {
+                throw FormulaError::Category::Div0;
+            }
+            return answer;
+        }
+        else if (op == '-') {
+            auto answer = lhs - rhs;
+            if (!std::isfinite(answer)) {
+                throw FormulaError::Category::Div0;
+            }
+            return answer;
+        }
+        else if (op == '*') {
+            auto answer = lhs * rhs;
+            if (!std::isfinite(answer)) {
+                throw FormulaError::Category::Div0;
+            }
+            return answer;
+        }
+        else if (op == '/') {
+            auto answer = lhs / rhs;
+            if (!std::isfinite(answer)) {
+                throw FormulaError::Category::Div0;
+            }
+            return answer;
+        }
+        return 0.0;
+    }
+
+}
+
 double AstBinaryOperation::Evaluate(const ISheet& sheet)
 {
-    if (op == '+') {
-        auto answer = lhs->Evaluate(sheet) + rhs->Evaluate(sheet);
-        if (!std::isfinite(answer)) {
-            throw FormulaError::Category::Div0;
+    auto lhsValue = lhs->Evaluate(sheet);
+    auto rhsValue = rhs->Evaluate(sheet);
+    return applyOperator(op, lhsValue, rhsValue);
+}
+
+double AstBinaryOperation::Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results)
+{
+    auto getValue = [&](const auto& operand) {
+        const auto ptr = reinterpret_cast<std::uintptr_t>(operand.get());
+        const auto it = results.find(ptr);
+        if (it != results.end()) {
+            return it->second;
         }
-        return answer;
-    }
-    else if (op == '-') {
-        auto answer = lhs->Evaluate(sheet) - rhs->Evaluate(sheet);
-        if (!std::isfinite(answer)) {
-            throw FormulaError::Category::Div0;
-        }
-        return answer;
-    }
-    else if (op == '*') {
-        auto answer = lhs->Evaluate(sheet) * rhs->Evaluate(sheet);
-        if (!std::isfinite(answer)) {
-            throw FormulaError::Category::Div0;
-        }
-        return answer;
-    }
-    else if (op == '/') {
-        auto answer = lhs->Evaluate(sheet) / rhs->Evaluate(sheet);
-        if (!std::isfinite(answer)) {
-            throw FormulaError::Category::Div0;
-        }
-        return answer;
-    }
-    return 0.0;
+
+        auto value = operand->Evaluate(sheet);
+        results[ptr] = value;
+        return value;
+    };
+
+    auto lhsValue = getValue(lhs);
+    auto rhsValue = getValue(rhs);
+    return applyOperator(op, lhsValue, rhsValue);
 }
 
 namespace {
@@ -218,6 +248,24 @@ std::string Ast::GetExpression() const
     for (size_t i = 0; i < operations.size(); ++i) {
         std::shared_ptr ptr = operations[i].lock();
         result = ptr->ToString(cachedResults);
+        cachedResults[reinterpret_cast<std::uintptr_t>(ptr.get())] = result;
+    }
+
+    return result;
+}
+
+double Ast::Evaluate(const ISheet& sheet)
+{
+    if (operations.size() < 2) {
+        return vertexes.top()->Evaluate(sheet);
+    }
+
+    std::unordered_map<std::uintptr_t, double> cachedResults;
+
+    double result{};
+    for (size_t i = 0; i < operations.size(); ++i) {
+        std::shared_ptr ptr = operations[i].lock();
+        result = ptr->Evaluate(sheet, cachedResults);
         cachedResults[reinterpret_cast<std::uintptr_t>(ptr.get())] = result;
     }
 

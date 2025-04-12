@@ -792,7 +792,7 @@ namespace {
 
         //std::cout << "formula: " << sheet->GetCell(firstCell)->GetText() << std::endl;
 
-        //std::cout << "value: " << sheet->GetCell(firstCell)->GetValue() << std::endl;
+        std::cout << "value: " << sheet->GetCell(firstCell)->GetValue() << std::endl;
     }
 }
 
