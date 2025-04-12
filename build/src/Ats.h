@@ -4,6 +4,8 @@
 #include <iostream>
 #include <set>
 #include <stack>
+#include <unordered_map>
+#include <unordered_set>
 
 
 class AstContext
@@ -41,7 +43,7 @@ public:
 
 class AstBinaryOperation : public AstContext
 {
-private:
+public:
     std::shared_ptr<AstContext> lhs;
     std::shared_ptr<AstContext> rhs;
     char op;
@@ -54,11 +56,15 @@ public:
     double Evaluate(const ISheet& sheet) override;
 
     std::string ToString(char other_op, bool isRight = false, bool isUnary = false) override;
+
+    std::string ToString(std::string lhsValue);
+
+    std::string ToString(std::unordered_map<std::uintptr_t, std::string>& results);
 };
 
 class AstUnaryOperator : public AstContext
 {
-private:
+public:
     std::shared_ptr<AstContext> ctx;
     char op;
 
@@ -77,10 +83,49 @@ public:
     std::stack<std::shared_ptr<AstContext>> formula;
     std::set<Position> ref_cells;
 
+    std::vector<std::weak_ptr<AstBinaryOperation>> operations;
+
 public:
     Ast() = default;
+
+    ~Ast() {
+        Clear();
+    }
 
     void PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp = false);
 
     std::string GetExpression() const;
+
+    void Ast::Clear() {
+        std::unordered_set<std::shared_ptr<AstContext>> visited;
+        std::stack<std::shared_ptr<AstContext>> stack;
+
+        while (!vertexes.empty()) {
+            stack.push(vertexes.top());
+            vertexes.pop();
+        }
+
+        while (!stack.empty()) {
+            auto node = stack.top();
+            stack.pop();
+
+            if (!node || visited.count(node)) continue;
+            visited.insert(node);
+
+            if (auto bin = std::dynamic_pointer_cast<AstBinaryOperation>(node)) {
+                if (bin->lhs) stack.push(bin->lhs);
+                if (bin->rhs) stack.push(bin->rhs);
+                bin->lhs.reset();
+                bin->rhs.reset();
+            }
+            else if (auto un = std::dynamic_pointer_cast<AstUnaryOperator>(node)) {
+                if (un->ctx) stack.push(un->ctx);
+                un->ctx.reset();
+            }
+        }
+
+        formula = {};
+        ref_cells = {};
+        operations = {};
+    }
 };

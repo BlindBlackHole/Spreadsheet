@@ -21,7 +21,7 @@ public:
     }
 };
 
-Ast GetContext(std::istream& in)
+std::unique_ptr<Ast> GetContext(std::istream& in)
 {
     antlr4::ANTLRInputStream input(in);
 
@@ -44,14 +44,13 @@ Ast GetContext(std::istream& in)
     } catch (...) {
         throw FormulaException("");
     }
-    auto ast = listener.GetResult();
-    return ast;
+    return listener.GetResult();
 }
 
 class Formula : public IFormula
 {
 private:
-    Ast ast;
+    std::unique_ptr<Ast> ast;
     std::string expr;
     std::vector<Position> ref_cells;
     std::string formatted_expr;
@@ -63,11 +62,14 @@ private:
         istringstream in(expr);
         try {
             ast = GetContext(in);
+            if (!ast) {
+                throw FormulaException("No AST: invalid formula");
+            }
         } catch (...) {
             throw FormulaException("");
         }
-        ref_cells = {ast.ref_cells.begin(), ast.ref_cells.end()};
-        expr = ast.GetExpression();
+        ref_cells = {ast->ref_cells.begin(), ast->ref_cells.end()};
+        expr = ast->GetExpression();
     }
 
 public:
@@ -76,7 +78,7 @@ public:
     Value Evaluate(const ISheet& sheet) const
     {
         try {
-            return ast.vertexes.top()->Evaluate(sheet);
+            return ast->vertexes.top()->Evaluate(sheet);
         }
         // If cell contain non number/cell value
         catch (FormulaError::Category c)

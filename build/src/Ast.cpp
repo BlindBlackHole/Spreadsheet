@@ -1,4 +1,5 @@
 #include "Ats.h"
+#include <unordered_map>
 #include <sstream>
 
 using namespace std;
@@ -113,25 +114,61 @@ double AstBinaryOperation::Evaluate(const ISheet& sheet)
     return 0.0;
 }
 
+namespace {
+
+    std::string formatResult(char op, std::string lhs, std::string rhs, char other_op, bool isRight = false, bool isUnary = false)
+    {
+        // a-(b+-c)
+        if (isRight && other_op == '-' && (op == '-' || op == '+')) {
+            return '(' + lhs + op + rhs + ')';
+        }
+        // a/(b*/c)
+        if (isRight && other_op == '/' && (op == '*' || op == '/')) {
+            return '(' + lhs + op + rhs + ')';
+        }
+        //(a+-b)/*c
+        if ((other_op == '*' || other_op == '/') && (op == '+' || op == '-')) {
+            return '(' + lhs + op + rhs + ')';
+        }
+        //+-(a+-b)
+        if (isRight && isUnary && (other_op == '-' || other_op == '+') && (op == '+' || op == '-')) {
+            return '(' + lhs + op + rhs + ')';
+        }
+        return lhs + op + rhs;
+    }
+
+}
+
 std::string AstBinaryOperation::ToString(char other_op, bool isRight, bool isUnary)
 {
-    // a-(b+-c)
-    if (isRight && other_op == '-' && (op == '-' || op == '+')) {
-        return '(' + lhs->ToString(op) + op + rhs->ToString(op, true) + ')';
-    }
-    // a/(b*/c)
-    if (isRight && other_op == '/' && (op == '*' || op == '/')) {
-        return '(' + lhs->ToString(op) + op + rhs->ToString(op, true) + ')';
-    }
-    //(a+-b)/*c
-    if ((other_op == '*' || other_op == '/') && (op == '+' || op == '-')) {
-        return '(' + lhs->ToString(op) + op + rhs->ToString(op, true) + ')';
-    }
-    //+-(a+-b)
-    if (isRight && isUnary && (other_op == '-' || other_op == '+') && (op == '+' || op == '-')) {
-        return '(' + lhs->ToString(op) + op + rhs->ToString(op, true) + ')';
-    }
-    return lhs->ToString(op) + op + rhs->ToString(op, true);
+    auto lhsValue = lhs->ToString(op);
+    auto rhsValue = rhs->ToString(op, true);
+    return formatResult(op, std::move(lhsValue), std::move(rhsValue), other_op, isRight, isUnary);
+}
+
+std::string AstBinaryOperation::ToString(std::string lhsValue)
+{
+    return lhsValue + op + rhs->ToString(op, true);
+}
+
+std::string AstBinaryOperation::ToString(std::unordered_map<std::uintptr_t, std::string>& results)
+{
+    auto getValue = [&] (const auto& operand, bool isRight) {
+        const auto ptr = reinterpret_cast<std::uintptr_t>(operand.get());
+        const auto it = results.find(ptr);
+        if (it != results.end()) {
+            return it->second;
+        }
+
+        auto value = operand->ToString(op, isRight);
+        results[ptr] = value;
+        return value;
+    };
+    
+    auto lhsValue = getValue(lhs, false);
+    auto rhsValue = getValue(rhs, true);
+
+    return formatResult(op, std::move(lhsValue), std::move(rhsValue), '.');
 }
 
 // AstBinaryOperation
@@ -161,7 +198,9 @@ void Ast::PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp)
         std::shared_ptr<AstContext> lhs = vertexes.top();
         vertexes.pop();
         operation->SetParams(lhs, rhs);
-        vertexes.push(std::make_shared<AstBinaryOperation>(*operation));
+        auto op = std::make_shared<AstBinaryOperation>(*operation);
+        vertexes.push(op);
+        operations.push_back(std::move(op));
         return;
     }
     vertexes.push(context);
@@ -169,7 +208,20 @@ void Ast::PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp)
 
 std::string Ast::GetExpression() const
 {
-    return vertexes.top()->ToString('.');
+    if (operations.size() < 2) {
+        return vertexes.top()->ToString('.');
+    }
+
+    std::unordered_map<std::uintptr_t, std::string> cachedResults;
+
+    std::string result;
+    for (size_t i = 0; i < operations.size(); ++i) {
+        std::shared_ptr ptr = operations[i].lock();
+        result = ptr->ToString(cachedResults);
+        cachedResults[reinterpret_cast<std::uintptr_t>(ptr.get())] = result;
+    }
+
+    return result;
 }
 
 // Ast

@@ -213,6 +213,8 @@ void TestFormulaExpressionFormatting()
     ASSERT_EQUAL(reformat("(2*3)+4"), "2*3+4");
     ASSERT_EQUAL(reformat("(2*3)-4"), "2*3-4");
     ASSERT_EQUAL(reformat("( ( (  1) ) )"), "1");
+    ASSERT_EQUAL(reformat("(2+3)+(1+2)"), "2+3+1+2");
+    ASSERT_EQUAL(reformat("(2+3)*(1+2)"), "(2+3)*(1+2)");
     ASSERT_EQUAL(reformat("2+3*4"), "2+3*4");
     ASSERT_EQUAL(reformat("(2+3)*4"), "(2+3)*4");
     ASSERT_EQUAL(reformat("(123 + 456) / -B35 * 1"), "(123+456)/-B35*1");
@@ -755,4 +757,46 @@ void TestDeletion()
         ASSERT_EQUAL(sheet->GetCell("B2"_pos)->GetValue(), ICell::Value(10));
         ASSERT_EQUAL(sheet->GetCell("C3"_pos)->GetValue(), ICell::Value(10));
     }
+}
+
+namespace {
+
+    auto createLargeTable()
+    {
+        const auto firstCell = "A1"_pos;
+        std::cout << "start createLargeTable" << std::endl;
+
+        auto sheet = CreateSheet();
+
+        std::string largeFormula = "=";
+
+        for (int row = 0; row < 100; ++row) {
+            for (int col = 0; col < 100; ++col) {
+                const auto pos = Position{ row, col };
+                sheet->SetCell(pos, "1");
+
+                if (!(pos == firstCell)) {
+                    largeFormula += pos.ToString() + "+";
+                }
+            }
+        }
+
+        auto po2 = Position::FromString("CV100");
+        std::cout << po2.row << " " << po2.col << std::endl;
+
+        std::cout << "table filled" << std::endl;
+
+        largeFormula.erase(largeFormula.end() - 1);
+
+        sheet->SetCell(firstCell, largeFormula);
+
+        //std::cout << "formula: " << sheet->GetCell(firstCell)->GetText() << std::endl;
+
+        //std::cout << "value: " << sheet->GetCell(firstCell)->GetValue() << std::endl;
+    }
+}
+
+void TestLargeTable()
+{
+    createLargeTable();
 }

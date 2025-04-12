@@ -1,4 +1,5 @@
 #include "cell.h";
+#include <stack>
 
 using namespace std;
 
@@ -56,17 +57,49 @@ void Cell::InvalidateValue()
     cached_val = nullopt;
 }
 
-void Cell::RecursionIndalidate(Position pos)
+//void Cell::RecursionIndalidate(Position pos)
+//{
+//    Cell* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
+//    if (cell) {
+//        cell->InvalidateValue();
+//        for (const auto& in_pos : cell->in_cells) {
+//            for (const auto& out_pos : out_cells) {
+//                if (pos == out_pos)
+//                    throw CircularDependencyException("");
+//            }
+//            RecursionIndalidate(in_pos);
+//        }
+//    }
+//}
+
+void Cell::RecursionIndalidate(Position start_pos)
 {
-    Cell* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
-    if (cell) {
-        cell->InvalidateValue();
-        for (const auto& in_pos : cell->in_cells) {
-            for (const auto& out_pos : out_cells) {
-                if (pos == out_pos)
-                    throw CircularDependencyException("");
+    std::unordered_set<Position, Hasher> visited;
+    std::stack<Position> to_visit;
+    to_visit.push(start_pos);
+
+    while (!to_visit.empty()) {
+        Position current_pos = to_visit.top();
+        to_visit.pop();
+
+        if (!visited.insert(current_pos).second) {
+            continue; // already visited
+        }
+
+        Cell* current_cell = dynamic_cast<Cell*>(sheet.GetCell(current_pos));
+        if (current_cell) {
+            current_cell->InvalidateValue();
+
+            for (const auto& in_pos : current_cell->in_cells) {
+                to_visit.push(in_pos);
             }
-            RecursionIndalidate(in_pos);
+
+            // Check for circular dependency
+            for (const auto& out_pos : out_cells) {
+                if (current_pos == out_pos) {
+                    throw CircularDependencyException("");
+                }
+            }
         }
     }
 }
