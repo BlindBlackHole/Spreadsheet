@@ -11,7 +11,8 @@
 class AstContext
 {
 public:
-    virtual double Evaluate(const ISheet&) = 0;
+    mutable int subtree_size = 1;  // default = 1
+    virtual double Evaluate(const ISheet&, bool wantParallel = false) = 0;
     virtual std::string ToString(char, bool = false, bool = false) = 0;
 };
 
@@ -23,7 +24,7 @@ private:
 public:
     AstNumber(double value);
 
-    double Evaluate(const ISheet&) override;
+    double Evaluate(const ISheet&, bool wantParallel = false) override;
 
     std::string ToString(char, bool, bool) override;
 };
@@ -36,7 +37,7 @@ private:
 public:
     AstCell(std::string pos);
 
-    double Evaluate(const ISheet& sheet) override;
+    double Evaluate(const ISheet& sheet, bool wantParallel = false) override;
 
     std::string ToString(char, bool, bool) override;
 };
@@ -53,7 +54,7 @@ public:
 
     void SetParams(std::shared_ptr<AstContext> lhs, std::shared_ptr<AstContext> rhs);
 
-    double Evaluate(const ISheet& sheet) override;
+    double Evaluate(const ISheet& sheet, bool wantParallel = false) override;
 
     double Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results);
 
@@ -73,7 +74,7 @@ public:
 public:
     AstUnaryOperator(std::shared_ptr<AstContext> ctx, char op);
 
-    double Evaluate(const ISheet& sheet) override;
+    double Evaluate(const ISheet& sheet, bool wantParallel = false) override;
 
     std::string ToString(char, bool, bool) override;
 };
@@ -98,7 +99,9 @@ public:
 
     std::string GetExpression() const;
 
-    double Evaluate(const ISheet& sheet);
+    double Evaluate(const ISheet& sheet, bool wantParallel = false);
+
+    double EvaluateParallel(const ISheet& sheet, bool wantParallel = true);
 
     void Ast::Clear() {
         std::unordered_set<std::shared_ptr<AstContext>> visited;

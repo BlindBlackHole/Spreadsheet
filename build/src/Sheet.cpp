@@ -1,5 +1,14 @@
 #include "Sheet.h"
 #include <algorithm>
+#include <ppl.h>
+#include <future>
+#include <sstream>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <execution>  // require C++17
+#include <algorithm>  // for std::for_each
+#include <unordered_map>
 
 using namespace std;
 
@@ -26,6 +35,10 @@ void Sheet::SetCell(Position pos, std::string text)
     else if (cells[pos.row][pos.col] != nullptr) {
         cells[pos.row][pos.col]->SetText(text);
         cells[pos.row][pos.col]->UpdateCell();
+
+        if (cells[pos.row][pos.col]->isLarge()) {
+            largeCells.push_back(cells[pos.row][pos.col]);
+        }
         try {
             cells[pos.row][pos.col]->InvalidateCachedValues();
         } catch (CircularDependencyException& exp) {
@@ -190,8 +203,116 @@ Size Sheet::GetPrintableSize() const
     return Size{rows_size, cols_size};
 }
 
+namespace {
+
+    template <typename Iterator, typename Func>
+    void parallel_for_each_if_large(Iterator begin, Iterator end, Func&& func, size_t threshold = 5000) {
+        size_t size = std::distance(begin, end);
+
+        if (size >= threshold) {
+            std::for_each(std::execution::par, begin, end, std::forward<Func>(func));
+        }
+        else {
+            std::for_each(std::execution::seq, begin, end, std::forward<Func>(func));
+        }
+    }
+
+    void EvaluateAllParallel(ISheet& sheet) {
+        using namespace std::chrono;
+        auto start_time = high_resolution_clock::now();
+
+        std::unordered_map<Position, int, Hasher> indegrees;
+        std::queue<Position> ready;
+        int total_levels = 0;
+
+        // 1. Побудова in-degree для кожної формульної клітинки
+        for (int row = 0; row < sheet.GetPrintableSize().rows; ++row) {
+            for (int col = 0; col < sheet.GetPrintableSize().cols; ++col) {
+                Position pos{ row, col };
+                auto* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
+                if (!cell || !cell->isFormula()) continue;
+
+                int deg = static_cast<int>(cell->in_cells.size());
+                indegrees[pos] = deg;
+
+                if (deg == 0) {
+                    ready.push(pos);
+                }
+            }
+        }
+
+        // 2. Обробка DAG
+        while (!ready.empty()) {
+            std::vector<Position> batch;
+
+            while (!ready.empty()) {
+                batch.push_back(ready.front());
+                ready.pop();
+            }
+
+            std::cout << "[DAG Level " << total_levels << "] Cells: " << batch.size() << std::endl;
+
+            // 3. Паралельне обчислення поточного шару
+            parallel_for_each_if_large(batch.begin(), batch.end(), [&](const Position& pos) {
+                auto* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
+                if (cell) {
+                    try {
+                        cell->GetValue();  // обчислює і кешує значення
+                    }
+                    catch (...) {
+                        // логіка помилок при потребі
+                    }
+                }
+            });
+
+            // 4. Зменшуємо in-degree для залежних клітинок
+            for (const auto& pos : batch) {
+                auto* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
+                if (!cell) continue;
+
+                for (const auto& dependent : cell->out_cells) {
+                    if (--indegrees[dependent] == 0) {
+                        ready.push(dependent);
+                    }
+                }
+            }
+
+            total_levels++;
+        }
+
+        auto end_time = high_resolution_clock::now();
+        auto duration = duration_cast<milliseconds>(end_time - start_time);
+
+        std::cout << "EvaluateAllParallel finished in " << duration.count() << " ms" << std::endl;
+        std::cout << "Total DAG levels (parallel layers): " << total_levels << std::endl;
+    }
+
+}
+
 void Sheet::PrintValues(std::ostream& output) const
 {
+    //std::vector<std::future<std::string>> futures;
+
+    //if (largeCells.size() > 1) {
+    //    for (const auto& largeCell : largeCells) {
+    //        if (!largeCell.expired()) {
+    //            futures.emplace_back(std::async(std::launch::async, [&largeCell]() {
+    //                std::ostringstream texts;
+    //                std::cout << largeCell.lock()->GetValue();
+    //                return texts.str();
+    //            }));
+    //        }
+    //    }
+    //}
+
+    //for (auto& fut : futures) {
+    //    std::cout << fut.get() << std::endl;
+    //}
+    using namespace std::chrono;
+    auto start_time = high_resolution_clock::now();
+
+    //EvaluateAllParallel(*const_cast<Sheet*>(this));
+
     for (size_t row = 0; row < cells.size(); ++row) {
         for (size_t col = 0; col < cols_size; ++col) {
             if (cells[row].size() > col && cells[row][col]) {
@@ -202,6 +323,10 @@ void Sheet::PrintValues(std::ostream& output) const
         }
         output << '\n';
     }
+    auto end_time = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(end_time - start_time);
+
+    std::cout << "PrintValues finished in " << duration.count() << " ms" << std::endl;
 }
 
 void Sheet::PrintTexts(std::ostream& output) const

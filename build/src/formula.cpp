@@ -78,13 +78,18 @@ public:
     Value Evaluate(const ISheet& sheet) const
     {
         try {
-            return ast->vertexes.top()->Evaluate(sheet);
+            return ast->Evaluate(sheet, true);
+            //return ast->vertexes.top()->Evaluate(sheet, true);
         }
         // If cell contain non number/cell value
         catch (FormulaError::Category c)
         {
             return c;
         }
+    }
+
+    bool isLarge() const final {
+        return ast->operations.size() >= 2000;
     }
 
     std::string GetExpression() const { return expr; }

@@ -1,13 +1,14 @@
 #include "Ats.h"
 #include <unordered_map>
 #include <sstream>
+#include <future>
 
 using namespace std;
 
 // AstNumber
 AstNumber::AstNumber(double value) : value(value) {}
 
-double AstNumber::Evaluate(const ISheet&)
+double AstNumber::Evaluate(const ISheet&, bool wantParallel)
 {
     return value;
 }
@@ -25,7 +26,7 @@ std::string AstNumber::ToString(char, bool, bool)
 // AstCell
 AstCell::AstCell(std::string pos) : pos(pos) {}
 
-double AstCell::Evaluate(const ISheet& sheet)
+double AstCell::Evaluate(const ISheet& sheet, bool wantParallel)
 {
     auto cell = sheet.GetCell(Position::FromString(pos));
     if (!cell || cell->GetText() == "") {
@@ -118,10 +119,10 @@ namespace {
 
 }
 
-double AstBinaryOperation::Evaluate(const ISheet& sheet)
+double AstBinaryOperation::Evaluate(const ISheet& sheet, bool wantParallel)
 {
-    auto lhsValue = lhs->Evaluate(sheet);
-    auto rhsValue = rhs->Evaluate(sheet);
+    auto lhsValue = lhs->Evaluate(sheet, wantParallel);
+    auto rhsValue = rhs->Evaluate(sheet, wantParallel);
     return applyOperator(op, lhsValue, rhsValue);
 }
 
@@ -134,7 +135,7 @@ double AstBinaryOperation::Evaluate(const ISheet& sheet, std::unordered_map<std:
             return it->second;
         }
 
-        auto value = operand->Evaluate(sheet);
+        auto value = operand->Evaluate(sheet, false);
         results[ptr] = value;
         return value;
     };
@@ -206,7 +207,7 @@ std::string AstBinaryOperation::ToString(std::unordered_map<std::uintptr_t, std:
 // AstUnaryOperator
 AstUnaryOperator::AstUnaryOperator(std::shared_ptr<AstContext> ctx, char op) : ctx(ctx), op(op) {}
 
-double AstUnaryOperator::Evaluate(const ISheet& sheet)
+double AstUnaryOperator::Evaluate(const ISheet& sheet, bool wantParallel)
 {
     return ctx->Evaluate(sheet) * (op == '-' ? -1.0 : 1.0);
 }
@@ -228,6 +229,9 @@ void Ast::PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp)
         std::shared_ptr<AstContext> lhs = vertexes.top();
         vertexes.pop();
         operation->SetParams(lhs, rhs);
+
+        operation->subtree_size = 1 + lhs->subtree_size + rhs->subtree_size;
+
         auto op = std::make_shared<AstBinaryOperation>(*operation);
         vertexes.push(op);
         operations.push_back(std::move(op));
@@ -254,8 +258,13 @@ std::string Ast::GetExpression() const
     return result;
 }
 
-double Ast::Evaluate(const ISheet& sheet)
+double Ast::Evaluate(const ISheet& sheet, bool wantParallel)
 {
+    if (wantParallel) {
+        std::cout << "wantParallel" << std::endl;
+        return EvaluateParallel(sheet, wantParallel);
+    }
+
     if (operations.size() < 2) {
         return vertexes.top()->Evaluate(sheet);
     }
@@ -270,6 +279,102 @@ double Ast::Evaluate(const ISheet& sheet)
     }
 
     return result;
+}
+
+double Ast::EvaluateParallel(const ISheet& sheet, bool wantParallel) {
+    constexpr int parallel_threshold = 1000;
+
+    std::unordered_map<std::uintptr_t, double> cached_results;
+    std::unordered_map<std::uintptr_t, std::future<double>> futures;
+
+    std::stack<std::shared_ptr<AstContext>> stack;
+
+    // 1. Скидаємо всі вершини в стек
+    std::stack<std::shared_ptr<AstContext>> temp_stack = vertexes;
+    while (!temp_stack.empty()) {
+        stack.push(temp_stack.top());
+        temp_stack.pop();
+    }
+
+    // 2. Обхід графа обчислення
+    while (!stack.empty()) {
+        auto node = stack.top();
+        stack.pop();
+
+        auto id = reinterpret_cast<std::uintptr_t>(node.get());
+
+        if (cached_results.count(id)) {
+            continue;  // вже обчислено
+        }
+
+        // Якщо це бінарна операція — обчислюємо обидві сторони
+        if (auto bin = std::dynamic_pointer_cast<AstBinaryOperation>(node)) {
+            auto lhs_id = reinterpret_cast<std::uintptr_t>(bin->lhs.get());
+            auto rhs_id = reinterpret_cast<std::uintptr_t>(bin->rhs.get());
+
+            // Обчислити або запустити обчислення для lhs
+            if (!cached_results.count(lhs_id)) {
+                if (bin->lhs->subtree_size > parallel_threshold && !futures.count(lhs_id)) {
+                    futures[lhs_id] = std::async(std::launch::async, [&sheet, lhs = bin->lhs]() {
+                        std::cout << "lhs parallel" << std::endl;
+                        return lhs->Evaluate(sheet, false);  // або EvaluateParallel, якщо рекурсія дозволена
+                    });
+                }
+                else {
+                    stack.push(bin->lhs);  // обчислимо вручну
+                }
+            }
+
+            // Те ж саме для rhs
+            if (!cached_results.count(rhs_id)) {
+                if (bin->rhs->subtree_size > parallel_threshold && !futures.count(rhs_id)) {
+                    futures[rhs_id] = std::async(std::launch::async, [&sheet, rhs = bin->rhs]() {
+                        std::cout << "rhs parallel" << std::endl;
+                        return rhs->Evaluate(sheet, false);
+                    });
+                }
+                else {
+                    stack.push(bin->rhs);
+                }
+            }
+
+            // Перевіримо, чи вже все готове
+            if ((cached_results.count(lhs_id) || futures.count(lhs_id)) &&
+                (cached_results.count(rhs_id) || futures.count(rhs_id))) {
+
+                // Забираємо з future, якщо треба
+                if (futures.count(lhs_id)) {
+                    cached_results[lhs_id] = futures[lhs_id].get();
+                    futures.erase(lhs_id);
+                }
+                if (futures.count(rhs_id)) {
+                    cached_results[rhs_id] = futures[rhs_id].get();
+                    futures.erase(rhs_id);
+                }
+
+                // Обчислюємо поточну операцію
+                double result = applyOperator(bin->op, cached_results[lhs_id], cached_results[rhs_id]);
+                cached_results[id] = result;
+            }
+            else {
+                // Поставимо назад, бо ще не готово
+                stack.push(node);
+            }
+
+        }
+        else {
+            // Це не бінарна операція — просто обчислити
+            double val = node->Evaluate(sheet);
+            cached_results[id] = val;
+        }
+    }
+
+    // Повертаємо результат з останнього вузла
+    if (vertexes.empty())
+        return 0.0;
+
+    auto top_id = reinterpret_cast<std::uintptr_t>(vertexes.top().get());
+    return cached_results.at(top_id);
 }
 
 // Ast

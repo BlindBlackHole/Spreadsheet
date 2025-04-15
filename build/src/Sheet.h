@@ -4,7 +4,8 @@
 class Sheet : public ISheet
 {
 private:
-    std::vector<std::vector<std::unique_ptr<Cell>>> cells;
+    std::vector<std::vector<std::shared_ptr<Cell>>> cells;
+    std::vector<std::weak_ptr<Cell>> largeCells;
     int cols_size = 0;
     int rows_size = 0;
 

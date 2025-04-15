@@ -12,7 +12,7 @@ struct Hasher
 
 class Cell : public ICell
 {
-private:
+public:
     Position position;
     Position prev_position;
     std::string text;
@@ -48,6 +48,11 @@ public:
     bool isFormula() const;
 
     void SetText(std::string text);
+
+    bool isLarge() const
+    {
+        return f && f->isLarge();
+    }
 
     Value GetValue() const override;
 

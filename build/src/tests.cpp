@@ -11,6 +11,10 @@
 #include "formula.h"
 #include "test_runner.h"
 
+#include <fstream>
+#include <execution>
+#include <algorithm>
+
 
 namespace {
 
@@ -761,42 +765,169 @@ void TestDeletion()
 
 namespace {
 
-    auto createLargeTable()
+    auto createLargeTable(std::unique_ptr<ISheet>& sheet, Position start, int rows, int cols, std::string defValue = "1")
     {
-        const auto firstCell = "A1"_pos;
-        std::cout << "start createLargeTable" << std::endl;
-
-        auto sheet = CreateSheet();
+        std::cout << "createLargeTable: " << start.ToString() << std::endl;
 
         std::string largeFormula = "=";
 
-        for (int row = 0; row < 100; ++row) {
-            for (int col = 0; col < 100; ++col) {
+        for (int row = start.row; row < start.row + rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
                 const auto pos = Position{ row, col };
-                sheet->SetCell(pos, "1");
+                sheet->SetCell(pos, defValue);
 
-                if (!(pos == firstCell)) {
+                if (!(pos == start)) {
                     largeFormula += pos.ToString() + "+";
                 }
             }
         }
 
-        auto po2 = Position::FromString("CV100");
-        std::cout << po2.row << " " << po2.col << std::endl;
-
         std::cout << "table filled" << std::endl;
 
         largeFormula.erase(largeFormula.end() - 1);
 
-        sheet->SetCell(firstCell, largeFormula);
+        sheet->SetCell(start, largeFormula);
 
-        //std::cout << "formula: " << sheet->GetCell(firstCell)->GetText() << std::endl;
-
-        std::cout << "value: " << sheet->GetCell(firstCell)->GetValue() << std::endl;
+        std::cout << "largeFormula set" << std::endl;
     }
+
+    void createDAGFriendlyTable(std::unique_ptr<ISheet>& sheet, int rows, int cols) {
+        std::cout << "createDAGFriendlyTable: " << rows << "x" << cols << std::endl;
+
+        // 1. Заповнюємо перший ряд базовими значеннями
+        for (int col = 0; col < cols; ++col) {
+            sheet->SetCell(Position{ 0, col }, "1");
+        }
+
+        // 2. Інші рядки формулами, які залежать від попереднього рядка
+        for (int row = 1; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                std::string formula = "=";
+
+                // Додаємо залежності: зліва, центр, справа в попередньому рядку
+                for (int delta = -1; delta <= 1; ++delta) {
+                    int prev_col = col + delta;
+                    if (prev_col >= 0 && prev_col < cols) {
+                        formula += Position{ row - 1, prev_col }.ToString() + "+";
+                    }
+                }
+
+                formula.pop_back(); // remove last '+'
+                sheet->SetCell(Position{ row, col }, formula);
+            }
+        }
+
+        std::cout << "DAG table created" << std::endl;
+    }
+
+    void createStressTestTable(std::unique_ptr<ISheet>& sheet, int rows, int cols) {
+        std::cout << "Generating " << rows << "x" << cols << " DAG table in parallel..." << std::endl;
+
+        using CellData = std::tuple<Position, std::string>;
+        std::vector<CellData> prepared_cells;
+        prepared_cells.reserve(rows * cols);
+
+        std::vector<int> indices(cols);
+        std::iota(indices.begin(), indices.end(), 0);
+
+        // 1. Перший ряд — просто значення
+        for (int col : indices) {
+            prepared_cells.emplace_back(Position{ 0, col }, "1");
+        }
+
+        // 2. Наступні рядки — формули
+        for (int row = 1; row < rows; ++row) {
+            std::vector<CellData> row_cells(cols);
+
+            std::for_each(std::execution::par, indices.begin(), indices.end(), [&](int col) {
+                std::string formula = "=";
+                for (int delta = -1; delta <= 1; ++delta) {
+                    int prev_col = col + delta;
+                    if (prev_col >= 0 && prev_col < cols) {
+                        formula += Position{ row - 1, prev_col }.ToString() + "+";
+                    }
+                }
+                formula.pop_back();
+                row_cells[col] = { Position{row, col}, std::move(formula) };
+                });
+
+            prepared_cells.insert(prepared_cells.end(), row_cells.begin(), row_cells.end());
+
+            if (row % 50 == 0) {
+                std::cout << "  Row " << row << " of " << rows << " prepared" << std::endl;
+            }
+        }
+
+        std::cout << "Filling sheet sequentially..." << std::endl;
+
+        for (const auto& [pos, text] : prepared_cells) {
+            sheet->SetCell(pos, text);  // безпечно, бо послідовно
+        }
+
+        std::cout << "DAG table filled." << std::endl;
+    }
+
+    std::string generateBalancedFormula(const std::vector<std::string>& vars) {
+        if (vars.size() == 1) return vars[0];
+
+        std::vector<std::string> next;
+        for (size_t i = 0; i + 1 < vars.size(); i += 2) {
+            next.push_back("(" + vars[i] + "+" + vars[i + 1] + ")");
+        }
+        // якщо непарна кількість — додаємо останній без об'єднання
+        if (vars.size() % 2 != 0) {
+            next.push_back(vars.back());
+        }
+        return generateBalancedFormula(next);
+    }
+
+    void GenerateHeavyFormula(std::unique_ptr<ISheet>& sheet, Position target, int count) {
+        std::vector<std::string> refs;
+        for (int i = 0; i < count; ++i) {
+            Position pos{ 0, i };
+            sheet->SetCell(pos, "1");
+            refs.push_back(pos.ToString());
+        }
+
+        std::string formula = "=" + generateBalancedFormula(refs);
+        sheet->SetCell(target, formula);
+    }
+
+}
+
+void TestParallelFormulaEval() {
+    auto sheet = CreateSheet();
+    // Створимо формулу з 1024 клітинок (глибина ~10, ширина — широка)
+    GenerateHeavyFormula(sheet, Position{ 1, 0 }, 1024);
+
+    auto start = std::chrono::high_resolution_clock::now();
+    auto value = sheet->GetCell({ 1, 0 })->GetValue();  // має викликати EvaluateParallel()
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Evaluated in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+}
+
+
+void TestParallelDAGTable() 
+{
+    auto sheet = CreateSheet();
+    createStressTestTable(sheet, 20, 5002);
+    //createDAGFriendlyTable(sheet, 10, 10000); // 100x100 DAG
+
+    std::ofstream file("dag-table2.csv");
+    sheet->PrintValues(file);
 }
 
 void TestLargeTable()
 {
-    createLargeTable();
+    auto sheet = CreateSheet();
+    createLargeTable(sheet, Position{ 0,0 }, 100, 100);
+    createLargeTable(sheet, Position{ 100,0 }, 100, 100, "2");
+    createLargeTable(sheet, Position{ 200,0 }, 100, 100, "3");
+    createLargeTable(sheet, Position{ 300,0 }, 100, 100, "4");
+
+    std::ostringstream texts;
+
+    std::ofstream file("table.csv");
+    sheet->PrintValues(file);
 }

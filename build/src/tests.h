@@ -63,3 +63,7 @@ void TestInsert();
 void TestDeletion();
 
 void TestLargeTable();
+
+void TestParallelDAGTable();
+
+void TestParallelFormulaEval();

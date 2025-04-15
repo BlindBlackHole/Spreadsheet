@@ -59,6 +59,8 @@ public:
     // FormulaError::Ref. Попытка вычислить такую формулу вернёт эту же ошибку.
     virtual HandlingResult HandleDeletedRows(int first, int count = 1) = 0;
     virtual HandlingResult HandleDeletedCols(int first, int count = 1) = 0;
+
+    virtual bool isLarge() const = 0;
 };
 
 // Парсит переданное выражение и возвращает объект формулы.

@@ -57,21 +57,6 @@ void Cell::InvalidateValue()
     cached_val = nullopt;
 }
 
-//void Cell::RecursionIndalidate(Position pos)
-//{
-//    Cell* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
-//    if (cell) {
-//        cell->InvalidateValue();
-//        for (const auto& in_pos : cell->in_cells) {
-//            for (const auto& out_pos : out_cells) {
-//                if (pos == out_pos)
-//                    throw CircularDependencyException("");
-//            }
-//            RecursionIndalidate(in_pos);
-//        }
-//    }
-//}
-
 void Cell::RecursionIndalidate(Position start_pos)
 {
     std::unordered_set<Position, Hasher> visited;
