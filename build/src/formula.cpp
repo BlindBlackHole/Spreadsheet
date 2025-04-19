@@ -79,7 +79,6 @@ public:
     {
         try {
             return ast->Evaluate(sheet, true);
-            //return ast->vertexes.top()->Evaluate(sheet, true);
         }
         // If cell contain non number/cell value
         catch (FormulaError::Category c)

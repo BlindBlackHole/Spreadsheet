@@ -240,9 +240,11 @@ void Ast::PutToStack(std::shared_ptr<AstContext> context, bool isBinaryOp)
     vertexes.push(context);
 }
 
+constexpr size_t MIN_PARALLEL_OPERATIONS = 10;
+
 std::string Ast::GetExpression() const
 {
-    if (operations.size() < 2) {
+    if (operations.size() < MIN_PARALLEL_OPERATIONS) {
         return vertexes.top()->ToString('.');
     }
 
@@ -260,13 +262,12 @@ std::string Ast::GetExpression() const
 
 double Ast::Evaluate(const ISheet& sheet, bool wantParallel)
 {
-    if (wantParallel) {
-        std::cout << "wantParallel" << std::endl;
-        return EvaluateParallel(sheet, wantParallel);
+    if (operations.size() < MIN_PARALLEL_OPERATIONS) {
+        return vertexes.top()->Evaluate(sheet);
     }
 
-    if (operations.size() < 2) {
-        return vertexes.top()->Evaluate(sheet);
+    if (wantParallel) {
+        return EvaluateParallel(sheet, wantParallel);
     }
 
     std::unordered_map<std::uintptr_t, double> cachedResults;
