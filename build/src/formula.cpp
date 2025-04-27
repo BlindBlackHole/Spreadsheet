@@ -69,7 +69,7 @@ private:
             throw FormulaException("");
         }
         ref_cells = {ast->ref_cells.begin(), ast->ref_cells.end()};
-        expr = ast->GetExpression();
+        //expr = ast->GetExpression();
     }
 
 public:
@@ -78,7 +78,7 @@ public:
     Value Evaluate(const ISheet& sheet) const
     {
         try {
-            return ast->Evaluate(sheet, true);
+            return ast->Evaluate(sheet, WANT_PARALLEL);
         }
         // If cell contain non number/cell value
         catch (FormulaError::Category c)
@@ -88,7 +88,7 @@ public:
     }
 
     bool isLarge() const final {
-        return ast->operations.size() >= 2000;
+        return ast->operations.size() >= ParallelThreshold;
     }
 
     std::string GetExpression() const { return expr; }

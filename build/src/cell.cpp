@@ -1,5 +1,6 @@
-#include "cell.h";
+#include "cell.h"
 #include <stack>
+
 
 using namespace std;
 
@@ -19,15 +20,20 @@ size_t Hasher::operator()(const Position& pos) const
 void Cell::UpdateDependencies(const Position& prev_pos)
 {
     out_cells = {};
+    out_cells_formulas = {};
     // in_cells = {};
     for (const Position& ref_pos : f->GetReferencedCells()) {  // O(N)
         // add ougoing cell
         out_cells.insert(ref_pos);
+
         // add incoming cell
         auto cell = dynamic_cast<Cell*>(sheet.GetCell(ref_pos));
         if (!cell) {
             sheet.SetCell(ref_pos, "");
             cell = dynamic_cast<Cell*>(sheet.GetCell(ref_pos));
+        }
+        if (cell->isFormula()) {
+            out_cells_formulas.insert(ref_pos);
         }
         cell->in_cells.erase(prev_pos);
         cell->in_cells.insert(position);

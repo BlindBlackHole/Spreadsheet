@@ -28,4 +28,7 @@ public:
 
     void PrintValues(std::ostream& output) const override;
     void PrintTexts(std::ostream& output) const override;
+
+    void save(std::ostream& output) const override;
+    void load(std::istream& in) override;
 };

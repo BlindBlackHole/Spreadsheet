@@ -172,7 +172,13 @@ public:
     // соответственно. Пустая ячейка представляется пустой строкой в любом случае.
     virtual void PrintValues(std::ostream& output) const = 0;
     virtual void PrintTexts(std::ostream& output) const = 0;
+
+    virtual void save(std::ostream& output) const = 0;
+    virtual void load(std::istream& in) = 0;
 };
+
+constexpr size_t ParallelThreshold = 80;
+extern bool WANT_PARALLEL;
 
 // Создаёт готовую к работе пустую таблицу.
 std::unique_ptr<ISheet> CreateSheet();

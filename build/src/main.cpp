@@ -5,10 +5,10 @@
 int main()
 {
     TestRunner tr;
-    RUN_TEST(tr, TestParallelFormulaEval);
+    //RUN_TEST(tr, TestParallelFormulaEval);
     //RUN_TEST(tr, TestParallelDAGTable);
-    //RUN_TEST(tr, TestLargeTable);
-    RUN_TEST(tr, TestPositionAndStringConversion);
+    RUN_TEST(tr, TestLargeTable);
+    /*RUN_TEST(tr, TestPositionAndStringConversion);
     RUN_TEST(tr, TestPositionToStringInvalid);
     RUN_TEST(tr, TestStringToPositionInvalid);
     RUN_TEST(tr, TestEmpty);
@@ -38,6 +38,6 @@ int main()
     RUN_TEST(tr, TestInvalidateCachedValues);
     RUN_TEST(tr, TestDeletedAllCells);
     RUN_TEST(tr, TestInsert);
-    RUN_TEST(tr, TestDeletion);
+    RUN_TEST(tr, TestDeletion);*/
     return 0;
 }

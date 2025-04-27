@@ -126,23 +126,40 @@ double AstBinaryOperation::Evaluate(const ISheet& sheet, bool wantParallel)
     return applyOperator(op, lhsValue, rhsValue);
 }
 
-double AstBinaryOperation::Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results)
+double AstBinaryOperation::Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results, bool wantParallel)
 {
     auto getValue = [&](const auto& operand) {
         const auto ptr = reinterpret_cast<std::uintptr_t>(operand.get());
         const auto it = results.find(ptr);
         if (it != results.end()) {
-            return it->second;
+            std::promise<double> p;
+            p.set_value(it->second);
+            return p.get_future();
+        }
+
+        if (operand->subtree_size != 1) {
+            std::cout << "subtree size: " << operand->subtree_size << "want parallel: " << wantParallel << std::endl;
+        }
+
+        if (wantParallel && operand->subtree_size >= ParallelThreshold) {
+            std::cout << "Exec subtree with size " << operand->subtree_size << " in parallel. Threshold: " << ParallelThreshold << std::endl;
+            return std::async(std::launch::async, [&sheet, operand, &results, ptr]() {
+                auto value = operand->Evaluate(sheet, false);
+                results[ptr] = value;
+                return value;
+            });
         }
 
         auto value = operand->Evaluate(sheet, false);
         results[ptr] = value;
-        return value;
+        std::promise<double> p;
+        p.set_value(value);
+        return p.get_future();
     };
 
     auto lhsValue = getValue(lhs);
     auto rhsValue = getValue(rhs);
-    return applyOperator(op, lhsValue, rhsValue);
+    return applyOperator(op, lhsValue.get(), rhsValue.get());
 }
 
 namespace {
@@ -266,16 +283,17 @@ double Ast::Evaluate(const ISheet& sheet, bool wantParallel)
         return vertexes.top()->Evaluate(sheet);
     }
 
-    if (wantParallel) {
-        return EvaluateParallel(sheet, wantParallel);
-    }
-
     std::unordered_map<std::uintptr_t, double> cachedResults;
+    std::unordered_map<std::uintptr_t, std::future<double>> futures;
+
+    //if (wantParallel) {
+    //    return EvaluateParallel(sheet, wantParallel);
+    //}
 
     double result{};
     for (size_t i = 0; i < operations.size(); ++i) {
         std::shared_ptr ptr = operations[i].lock();
-        result = ptr->Evaluate(sheet, cachedResults);
+        result = ptr->Evaluate(sheet, cachedResults, false);
         cachedResults[reinterpret_cast<std::uintptr_t>(ptr.get())] = result;
     }
 
@@ -283,7 +301,8 @@ double Ast::Evaluate(const ISheet& sheet, bool wantParallel)
 }
 
 double Ast::EvaluateParallel(const ISheet& sheet, bool wantParallel) {
-    constexpr int parallel_threshold = 1000;
+
+    constexpr int parallel_threshold = ParallelThreshold;
 
     std::unordered_map<std::uintptr_t, double> cached_results;
     std::unordered_map<std::uintptr_t, std::future<double>> futures;
@@ -316,25 +335,26 @@ double Ast::EvaluateParallel(const ISheet& sheet, bool wantParallel) {
             // Обчислити або запустити обчислення для lhs
             if (!cached_results.count(lhs_id)) {
                 if (bin->lhs->subtree_size > parallel_threshold && !futures.count(lhs_id)) {
+                    std::cout << "Exec lhs subtree with size " << bin->lhs->subtree_size << " in parallel. Threshold: " << parallel_threshold << std::endl;
                     futures[lhs_id] = std::async(std::launch::async, [&sheet, lhs = bin->lhs]() {
-                        std::cout << "lhs parallel" << std::endl;
                         return lhs->Evaluate(sheet, false);  // або EvaluateParallel, якщо рекурсія дозволена
                     });
                 }
                 else {
-                    stack.push(bin->lhs);  // обчислимо вручну
+                    
                 }
             }
 
             // Те ж саме для rhs
             if (!cached_results.count(rhs_id)) {
                 if (bin->rhs->subtree_size > parallel_threshold && !futures.count(rhs_id)) {
+                    std::cout << "Exec rhs subtree with size " << bin->rhs->subtree_size << " in parallel. Threshold: " << parallel_threshold << std::endl;
                     futures[rhs_id] = std::async(std::launch::async, [&sheet, rhs = bin->rhs]() {
-                        std::cout << "rhs parallel" << std::endl;
                         return rhs->Evaluate(sheet, false);
                     });
                 }
                 else {
+                    //std::cout << "Exec rhs subtree with size " << bin->rhs->subtree_size << " sequencly. Threshold: " << parallel_threshold << std::endl;
                     stack.push(bin->rhs);
                 }
             }

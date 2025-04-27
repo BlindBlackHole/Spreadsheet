@@ -56,7 +56,7 @@ public:
 
     double Evaluate(const ISheet& sheet, bool wantParallel = false) override;
 
-    double Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results);
+    double Evaluate(const ISheet& sheet, std::unordered_map<std::uintptr_t, double>& results, bool wantParallel = false);
 
     std::string ToString(char other_op, bool isRight = false, bool isUnary = false) override;
 

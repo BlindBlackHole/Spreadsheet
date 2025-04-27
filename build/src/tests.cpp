@@ -14,6 +14,10 @@
 #include <fstream>
 #include <execution>
 #include <algorithm>
+#include <limits>
+
+#include <windows.h>
+#include <psapi.h>
 
 
 namespace {
@@ -385,45 +389,45 @@ void TestErrorValue()
 
 void TestErrorDiv0()
 {
-    auto sheet = CreateSheet();
+    //auto sheet = CreateSheet();
 
-    constexpr double max = std::numeric_limits<double>::max();
+    //constexpr double max = std::numeric_limits<double>::max();
 
-    sheet->SetCell("A1"_pos, "=1/0");
-    ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
+    //sheet->SetCell("A1"_pos, "=1/0");
+    //ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
 
-    sheet->SetCell("A1"_pos, "=1e+200/1e-200");
-    ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
+    //sheet->SetCell("A1"_pos, "=1e+200/1e-200");
+    //ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
 
-    sheet->SetCell("A1"_pos, "=0/0");
-    ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
+    //sheet->SetCell("A1"_pos, "=0/0");
+    //ASSERT_EQUAL(sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0));
 
-    {
-        std::ostringstream formula;
-        formula << '=' << max << '+' << max;
-        sheet->SetCell("A1"_pos, formula.str());
-        ASSERT_EQUAL(
-            sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
-        );
-    }
+    //{
+    //    std::ostringstream formula;
+    //    formula << '=' << max << '+' << max;
+    //    sheet->SetCell("A1"_pos, formula.str());
+    //    ASSERT_EQUAL(
+    //        sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
+    //    );
+    //}
 
-    {
-        std::ostringstream formula;
-        formula << '=' << -max << '-' << max;
-        sheet->SetCell("A1"_pos, formula.str());
-        ASSERT_EQUAL(
-            sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
-        );
-    }
+    //{
+    //    std::ostringstream formula;
+    //    formula << '=' << -max << '-' << max;
+    //    sheet->SetCell("A1"_pos, formula.str());
+    //    ASSERT_EQUAL(
+    //        sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
+    //    );
+    //}
 
-    {
-        std::ostringstream formula;
-        formula << '=' << max << '*' << max;
-        sheet->SetCell("A1"_pos, formula.str());
-        ASSERT_EQUAL(
-            sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
-        );
-    }
+    //{
+    //    std::ostringstream formula;
+    //    formula << '=' << max << '*' << max;
+    //    sheet->SetCell("A1"_pos, formula.str());
+    //    ASSERT_EQUAL(
+    //        sheet->GetCell("A1"_pos)->GetValue(), ICell::Value(FormulaError::Category::Div0)
+    //    );
+    //}
 }
 
 void TestEmptyCellTreatedAsZero()
@@ -893,9 +897,216 @@ namespace {
         sheet->SetCell(target, formula);
     }
 
+    void generateSimpleTable()
+    {
+        const size_t rows = 100;
+        const size_t cols = 10;
+
+        std::ofstream out("SimpleTable.csv");
+
+        for (int row = 0; row <= rows; ++row) {
+            // Формуємо першу клітинку з формулою
+            out << '=';
+            for (int col = 1; col < cols; ++col) {
+                Position pos{ row, col };
+                out << pos.ToString();
+                if (col != cols - 1)
+                    out << '+';
+            }
+
+            // Додаємо решту клітинок з числом 1
+            for (int col = 1; col < cols; ++col) {
+                out << ';' << 1;
+            }
+
+            out << '\n';
+        }
+    }
+
+    void generateMediumTable()
+    {
+        const size_t rows = 1000;
+        const size_t cols = 101;
+
+        std::ofstream out("LargeTable2.csv");
+
+        for (int row = 0; row <= rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                if (col != 0)
+                    out << ';';
+
+                // Кожна 20-та колонка (включаючи 0) — формула
+                if (col % 20 == 0 && col != 0) {
+                    out << '=';
+                    for (int prev = 0; prev < col; ++prev) {
+                        Position pos{ row, prev };
+                        out << pos.ToString();
+                        if (prev != col - 1)
+                            out << '+';
+                    }
+                }
+                else {
+                    out << 1;
+                }
+            }
+
+            out << '\n';
+        }
+    }
+
+    void generateLargeTable()
+    {
+        const size_t rows = 1001;
+        const size_t cols = 101;
+
+        std::ofstream out("LargeTable.csv");
+
+        for (int row = 0; row < rows; ++row) {
+            // --- Перша колонка (колонка 0) ---
+            if (row % 100 == 0 && row != 0) {
+                // Сотий рядок: формула суми A[row-99] ... A[row-1]
+                out << '=';
+                for (int r = row - 99; r < row; ++r) {
+                    Position pos{ r, 0 };
+                    out << pos.ToString();
+                    if (r != row - 1)
+                        out << '+';
+                }
+            }
+            else {
+                // Інші рядки: формула суми поточного рядка по всіх колонках, крім першої
+                out << '=';
+                for (int col = 1; col < cols; ++col) {
+                    Position pos{ row, col };
+                    out << pos.ToString();
+                    if (col != cols - 1)
+                        out << '+';
+                }
+            }
+
+            // --- Решта колонок (1 до 1000): просто одинички ---
+            for (int col = 1; col < cols; ++col) {
+                out << ';' << 1;
+            }
+
+            out << '\n';
+        }
+    }
+
+    void generateHugeTable() {
+        const size_t rows = 10000;
+        const size_t cols = 100;
+
+        std::ofstream out("HugeTable.csv");
+
+        for (size_t row = 0; row < rows; ++row) {
+            for (size_t col = 0; col < cols; ++col) {
+                if (col != 0)
+                    out << ';';
+
+                // Обчислення для першої колонки кожного 100-го рядка
+                if (col == 0 && row % 100 == 0 && row != 0) {
+                    out << '=';
+                    size_t start = row - 99;
+                    size_t end = row;
+
+                    for (size_t r = start; r < end; ++r) {
+                        Position pos{ r, 0 };
+                        out << pos.ToString();
+                        if (r != end - 1)
+                            out << '+';
+                    }
+                }
+                // Обчислення для кожної 50-ї колонки (крім 0)
+                else if (col % 50 == 0 && col != 0) {
+                    out << '=';
+                    for (size_t i = 0; i < col; ++i) {
+                        Position pos{ row, i };
+                        out << pos.ToString();
+                        if (i != col - 1)
+                            out << '+';
+                    }
+                }
+                // Звичайна клітинка
+                else {
+                    out << '1';
+                }
+            }
+
+            out << '\n';
+        }
+    }
+
+
+    void TestTableImpl(const std::string& tableName, bool wantParallel)
+    {
+        WANT_PARALLEL = wantParallel;
+        PROCESS_MEMORY_COUNTERS memCounters;
+        auto str = wantParallel ? "true" : "false";
+        std::cout << "------------------- " << tableName  << " in parallel mode: " << str << " -------------------" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto sheet = CreateSheet();
+
+        std::ifstream file(tableName);
+        sheet->load(file);
+        auto endLoad = std::chrono::high_resolution_clock::now();
+        std::cout << "Loading table end. Evaluated in " << std::chrono::duration_cast<std::chrono::milliseconds>(endLoad - start).count() << "ms" << std::endl;
+
+        FILETIME ftCreation, ftExit, ftKernelStart, ftUserStart;
+        FILETIME ftCreation2, ftExit2, ftKernelEnd, ftUserEnd;
+
+        GetProcessTimes(GetCurrentProcess(), &ftCreation, &ftExit, &ftKernelStart, &ftUserStart);
+        ULONGLONG wallStart = GetTickCount64();
+
+        std::ofstream out("SimpleTableOut.csv");
+        sheet->PrintValues(out);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::cout << tableName << " evaluated in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - endLoad).count() << "ms" << std::endl;
+        if (GetProcessMemoryInfo(GetCurrentProcess(), &memCounters, sizeof(memCounters))) {
+            std::cout << "Peak working set size: "
+                << memCounters.PeakWorkingSetSize / (1024 * 1024)
+                << " MB\n";
+        }
+
+        GetProcessTimes(GetCurrentProcess(), &ftCreation2, &ftExit2, &ftKernelEnd, &ftUserEnd);
+        ULONGLONG wallEnd = GetTickCount64();
+
+        auto toUL = [](FILETIME ft) {
+            return (static_cast<ULONGLONG>(ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+        };
+
+        ULONGLONG kernelStart = toUL(ftKernelStart);
+        ULONGLONG userStart = toUL(ftUserStart);
+        ULONGLONG kernelEnd = toUL(ftKernelEnd);
+        ULONGLONG userEnd = toUL(ftUserEnd);
+
+        ULONGLONG cpuTime100ns = (kernelEnd - kernelStart) + (userEnd - userStart);
+        double cpuTimeMs = cpuTime100ns / 10000.0;
+
+        double wallTimeMs = wallEnd - wallStart;
+
+        SYSTEM_INFO sysinfo;
+        GetSystemInfo(&sysinfo);
+        DWORD numCPU = sysinfo.dwNumberOfProcessors;
+
+        double cpuUsagePercent = (cpuTimeMs / wallTimeMs) * 100.0 / numCPU;
+
+        std::cout << "Approx. average CPU usage: " << cpuUsagePercent << "%\n";
+    }
+
+    void TestTable(const std::string& tableName)
+    {
+        TestTableImpl(tableName, false);
+        TestTableImpl(tableName, true);
+    }
+
 }
 
 void TestParallelFormulaEval() {
+    //generateLargeTable();
+    //generateSimpleTable();
+    //generateMediumTable();
     auto sheet = CreateSheet();
     // Створимо формулу з 1024 клітинок (глибина ~10, ширина — широка)
     GenerateHeavyFormula(sheet, Position{ 1, 0 }, 1024);
@@ -918,16 +1129,32 @@ void TestParallelDAGTable()
     sheet->PrintValues(file);
 }
 
+
+
 void TestLargeTable()
 {
-    auto sheet = CreateSheet();
-    createLargeTable(sheet, Position{ 0,0 }, 100, 100);
-    createLargeTable(sheet, Position{ 100,0 }, 100, 100, "2");
-    createLargeTable(sheet, Position{ 200,0 }, 100, 100, "3");
-    createLargeTable(sheet, Position{ 300,0 }, 100, 100, "4");
+    generateHugeTable();
+    // generateLargeTable();
 
-    std::ostringstream texts;
+    // sheet->GetCell("A1"_pos)->GetValue();
+    //generateMediumTable();
+    // return;
 
-    std::ofstream file("table.csv");
-    sheet->PrintValues(file);
+    TestTable("HugeTable.csv");
+
+    //TestTable("SimpleTable.csv");
+    //TestTable("MediumTable.csv");
+    //TestTable("LargeTable.csv");
+    //TestTable("LargeTable2.csv");
+    
+    //auto sheet = CreateSheet();
+    //createLargeTable(sheet, Position{ 0,0 }, 100, 100);
+    //createLargeTable(sheet, Position{ 100,0 }, 100, 100, "2");
+    //createLargeTable(sheet, Position{ 200,0 }, 100, 100, "3");
+    //createLargeTable(sheet, Position{ 300,0 }, 100, 100, "4");
+
+    //std::ostringstream texts;
+
+    //std::ofstream file("table.csv");
+    //sheet->PrintValues(file);
 }

@@ -5,6 +5,8 @@
 #include <optional>
 #include <unordered_set>
 
+#include <iostream>
+
 struct Hasher
 {
     size_t operator()(const Position& pos) const;
@@ -24,6 +26,7 @@ public:
     IFormula::HandlingResult changes = IFormula::HandlingResult::NothingChanged;
     std::unordered_set<Position, Hasher> in_cells;
     std::unordered_set<Position, Hasher> out_cells;
+    std::unordered_set<Position, Hasher> out_cells_formulas;
 
 private:
     void UpdateDependencies(const Position& prev_pos);

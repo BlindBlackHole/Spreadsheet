@@ -36,9 +36,6 @@ void Sheet::SetCell(Position pos, std::string text)
         cells[pos.row][pos.col]->SetText(text);
         cells[pos.row][pos.col]->UpdateCell();
 
-        if (cells[pos.row][pos.col]->isLarge()) {
-            largeCells.push_back(cells[pos.row][pos.col]);
-        }
         try {
             cells[pos.row][pos.col]->InvalidateCachedValues();
         } catch (CircularDependencyException& exp) {
@@ -206,13 +203,15 @@ Size Sheet::GetPrintableSize() const
 namespace {
 
     template <typename Iterator, typename Func>
-    void parallel_for_each_if_large(Iterator begin, Iterator end, Func&& func, size_t threshold = 5000) {
+    void parallel_for_each_if_large(Iterator begin, Iterator end, Func&& func, size_t threshold) {
         size_t size = std::distance(begin, end);
 
         if (size >= threshold) {
+            //std::cout << "Exec batch with size " << size << " in parallel. Threshold: " << threshold << std::endl;
             std::for_each(std::execution::par, begin, end, std::forward<Func>(func));
         }
         else {
+            //std::cout << "Exec batch with size " << size << " sequencly. Threshold: " << threshold << std::endl;
             std::for_each(std::execution::seq, begin, end, std::forward<Func>(func));
         }
     }
@@ -232,7 +231,7 @@ namespace {
                 auto* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
                 if (!cell || !cell->isFormula()) continue;
 
-                int deg = static_cast<int>(cell->in_cells.size());
+                int deg = static_cast<int>(cell->out_cells_formulas.size());
                 indegrees[pos] = deg;
 
                 if (deg == 0) {
@@ -250,7 +249,7 @@ namespace {
                 ready.pop();
             }
 
-            std::cout << "[DAG Level " << total_levels << "] Cells: " << batch.size() << std::endl;
+            //std::cout << "[DAG Level " << total_levels << "] Cells: " << batch.size() << std::endl;
 
             // 3. Паралельне обчислення поточного шару
             parallel_for_each_if_large(batch.begin(), batch.end(), [&](const Position& pos) {
@@ -263,14 +262,14 @@ namespace {
                         // логіка помилок при потребі
                     }
                 }
-            });
+            }, ParallelThreshold);
 
             // 4. Зменшуємо in-degree для залежних клітинок
             for (const auto& pos : batch) {
                 auto* cell = dynamic_cast<Cell*>(sheet.GetCell(pos));
                 if (!cell) continue;
 
-                for (const auto& dependent : cell->out_cells) {
+                for (const auto& dependent : cell->in_cells) {
                     if (--indegrees[dependent] == 0) {
                         ready.push(dependent);
                     }
@@ -283,35 +282,20 @@ namespace {
         auto end_time = high_resolution_clock::now();
         auto duration = duration_cast<milliseconds>(end_time - start_time);
 
-        std::cout << "EvaluateAllParallel finished in " << duration.count() << " ms" << std::endl;
-        std::cout << "Total DAG levels (parallel layers): " << total_levels << std::endl;
+        //std::cout << "EvaluateAllParallel finished in " << duration.count() << " ms" << std::endl;
+        //std::cout << "Total DAG levels (parallel layers): " << total_levels << std::endl;
     }
 
 }
 
 void Sheet::PrintValues(std::ostream& output) const
 {
-    //std::vector<std::future<std::string>> futures;
-
-    //if (largeCells.size() > 1) {
-    //    for (const auto& largeCell : largeCells) {
-    //        if (!largeCell.expired()) {
-    //            futures.emplace_back(std::async(std::launch::async, [&largeCell]() {
-    //                std::ostringstream texts;
-    //                std::cout << largeCell.lock()->GetValue();
-    //                return texts.str();
-    //            }));
-    //        }
-    //    }
-    //}
-
-    //for (auto& fut : futures) {
-    //    std::cout << fut.get() << std::endl;
-    //}
     using namespace std::chrono;
     auto start_time = high_resolution_clock::now();
 
-    //EvaluateAllParallel(*const_cast<Sheet*>(this));
+    if (WANT_PARALLEL) {
+        EvaluateAllParallel(*const_cast<Sheet*>(this));
+    }
 
     for (size_t row = 0; row < cells.size(); ++row) {
         for (size_t col = 0; col < cols_size; ++col) {
@@ -326,7 +310,7 @@ void Sheet::PrintValues(std::ostream& output) const
     auto end_time = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end_time - start_time);
 
-    std::cout << "PrintValues finished in " << duration.count() << " ms" << std::endl;
+    //std::cout << "PrintValues finished in " << duration.count() << " ms" << std::endl;
 }
 
 void Sheet::PrintTexts(std::ostream& output) const
@@ -346,6 +330,40 @@ void Sheet::PrintTexts(std::ostream& output) const
                 output << '\t';
         }
         output << '\n';
+    }
+}
+
+void Sheet::save(std::ostream& output) const
+{
+    for (size_t row = 0; row < cells.size(); ++row) {
+        for (size_t col = 0; col < cols_size; ++col) {
+            if (cells[row].size() > col && cells[row][col]) {
+                output << cells[row][col]->GetText();
+            }
+            if (col != cols_size - 1)
+                output << ';';
+        }
+        output << '\n';
+    }
+}
+
+void Sheet::load(std::istream& in)
+{
+    cells.clear();
+    std::string line;
+
+    int rowN = 0;
+
+    while (std::getline(in, line)) {
+        std::stringstream ss(line);
+        std::string cellText;
+
+        int colN = 0;
+        while (std::getline(ss, cellText, ';')) {
+            SetCell({ rowN, colN }, std::move(cellText));
+            colN++;
+        }
+        rowN++;
     }
 }
 

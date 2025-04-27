@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 
+bool WANT_PARALLEL = true;
 
 using namespace std;
 
